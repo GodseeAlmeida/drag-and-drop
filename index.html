@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Drag and Drop Example</title>
+  <style>
+    /* Styling for the page */
+    * {
+      margin: 10;
+      padding: 0;
+      border-color: #f2f2f2;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #1a1a1a;
+      color: #f2f2f2;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: normal;
+    }
+
+    /* Styling for the title */
+    .title {
+      color: white;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .title>h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+    }
+
+   
+    .flex {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    
+     /* Styling for the containers */
+
+    .container {
+      width: 200px;
+      height: 300px;
+      float: left;
+      margin-right: 10px;
+      background-color: black;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      border: 2px solid #ffffff8c;
+      border-radius: 5px;
+      align-items: center;
+    }
+
+    /* Styling for the draggable items */
+    .item {
+      margin: auto;
+      margin-top: 20px;
+      margin-bottom: 30px;
+      background-color: slateblue;
+      border-radius: 5px;
+      width: 90%;
+      padding: 10px;
+      cursor: pointer;
+      animation: fadeIn .3s ease-in-out;
+    }
+
+    .item:hover {
+      background-color: #003366;
+    }
+
+    /* Styling for the success message and reset button */
+    .success-message {
+      color: white;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .reset-button {
+      margin-top: 10px;
+      width: 100%;
+      height: 60px;
+      background-color: whitesmoke;
+    }
+
+    /* Styling for the main container */
+    .container-main {
+      min-height: 85vh;
+    }
+  </style>
+</head>
+<body class="flex container-main">
+  <!-- Title section -->
+  <div class="title">
+    <h1 style="color: white;">Drag and Drop Example</h1>
+  </div>
+
+  <div style="text-align: center;">
+    <!-- Container 1 - Items to be dragged -->
+    <div class="container" id="container1">
+      <div class="item" draggable="true">
+        <div class="small-container" style="background-color: black;"></div>
+        <span>Item 1</span>
+      </div>
+      <div class="item" draggable="true">
+        <div class="small-container" style="background-color: black;"></div>
+        <span>Item 2</span>
+      </div>
+      <div class="item" draggable="true">
+        <div class="small-container" style="background-color: black;"></div>
+        <span>Item 3</span>
+      </div>
+      <div class="item" draggable="true">
+        <div class="small-container" style="background-color: black;"></div>
+        <span>Item 4</span>
+      </div>
+    </div>
+
+    <!-- Container 2 - Drop zone for items -->
+    <div class="container" id="container2"></div>
+
+    <!-- Success message and reset button -->
+    <p class="success-message" id="successMessage"></p>
+    <button class="reset-button" onclick="reset()">Reset</button>
+  </div>
+
+  <script>
+    // Get references to DOM elements
+    const items = document.querySelectorAll('.item');                // Get all draggable items
+    const container2 = document.getElementById('container2');       // Get container 2 (drop zone)
+    const successMessage = document.getElementById('successMessage');// Get success message
+
+    let draggedItem = null;  // Reference to the currently dragged item
+
+    // Add event listeners for drag events on each item
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+
+      item.addEventListener('dragstart', function(e) {
+        draggedItem = item;                                         // Set the dragged item reference
+        setTimeout(function() {
+          item.style.display = 'none';                              // Hide the item while dragging
+        }, 0);
+      });
+
+      item.addEventListener('dragend', function() {
+        setTimeout(function() {
+          draggedItem.style.display = 'block';                      // Show the item after dragging
+          draggedItem = null;                                       // Reset the dragged item reference
+        }, 0);
+      });
+    }
+
+    // Add event listeners for drag events on container 2
+    container2.addEventListener('dragover', function(e) 
+    {
+      e.preventDefault();                                          // Allow drop event
+    });
+
+    container2.addEventListener('dragenter', function(e) {
+      e.preventDefault();                                          // Allow drop event
+    });
+
+    container2.addEventListener('dragleave', function() {
+      container2.style.background = 'black';                        // Reset the background color when leaving the drop zone
+    });
+
+    container2.addEventListener('drop', function() {
+      container2.appendChild(draggedItem);                           // Append the dragged item to container 2
+      container2.style.background = 'black';                         // Reset the background color
+      const smallContainer = draggedItem.querySelector('.small-container');
+      smallContainer.style.backgroundColor = '#003366';              // Set the small container's background color
+      successMessage.innerText = 'Item dropped successfully!';       // Show the success message
+    });
+
+    // Reset function to clear container 2 and reset styles
+    function reset() {
+      container2.innerHTML = '';                                    // Clear container 2
+      successMessage.innerText = '';                                // Clear the success message
+      for (let i = 0; i < items.length; i++) {
+        document.getElementById('container1').appendChild(items[i]);// Append items back to container 1
+        const smallContainer = items[i].querySelector('.small-container');
+        smallContainer.style.backgroundColor = 'black';              // Reset small container's background color
+      }
+    }
+  </script>
+</body>
+</html>
